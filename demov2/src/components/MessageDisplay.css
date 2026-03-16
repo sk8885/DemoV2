@@ -1,0 +1,121 @@
+.messages-container {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.messages-container h2 {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+}
+
+.no-messages {
+  text-align: center;
+  color: #95a5a6;
+  padding: 40px 20px;
+  font-style: italic;
+}
+
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message-item {
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+.message-time {
+  font-weight: 600;
+  color: #7f8c8d;
+  margin-bottom: 5px;
+  font-size: 0.85rem;
+}
+
+.message-type {
+  font-weight: 500;
+  color: #3498db;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.message-content {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-height: 200px;
+  overflow-y: auto;
+  color: #2c3e50;
+  background-color: #ecf0f1;
+  padding: 10px;
+  border-radius: 4px;
+  line-height: 1.4;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .messages-container {
+    max-height: 400px;
+  }
+
+  .message-item {
+    padding: 12px;
+  }
+}
+
+.messages-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.messages-table th,
+.messages-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.messages-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+
+.messages-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.no-messages {
+  color: #888;
+  font-style: italic;
+}
+
+.green-background {
+  background-color: #d4edda; /* A light green color */
+}
+
+.yellow-background {
+  background-color: #fff3cd; /* A light yellow color */
+}
+.red-background{
+  background-color: #f8d7da; /* A light red color */
+}
+
+/* Add this to MessageDisplay.css */
+.placeholder-row {
+  color: #888; /* Make the text gray */
+  font-style: italic;
+}
