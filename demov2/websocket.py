@@ -10,7 +10,7 @@ import uvicorn
 # All messages are now expected from a single topic.
 MQTT_BROKER_URL = os.getenv("MQTT_BROKER_URL", "10.233.45.50")
 MQTT_BROKER_PORT = int(os.getenv("MQTT_BROKER_PORT", 1883))
-MQTT_INPUT_TOPIC = os.getenv("REACT_APP_MQTT_TOPIC", "demo_tester_topic")
+MQTT_INPUT_TOPIC = os.getenv("REACT_APP_MQTT_TOPIC", "spd_event_tester_topic")
 
 # --- FastAPI App ---
 app = FastAPI()

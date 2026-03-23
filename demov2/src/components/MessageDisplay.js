@@ -32,6 +32,7 @@ function MessageDisplay({ messages, filters }) {
       setDisplayData(initialData);
       setIsCsvMode(true);
       processedMessagesCountRef.current = 0; // Reset counter for new CSV data
+      console.log(initialData);
     } else {
       setDisplayData([]);
       setIsCsvMode(false);
@@ -51,25 +52,33 @@ function MessageDisplay({ messages, filters }) {
     
 
     newMessages.forEach(message => {
-      const latestMessagePayload = message.data.payload;
-      if (latestMessagePayload && latestMessagePayload.Tag) {
+      const  processedPayload= message.data.payload;
+      if (processedPayload && processedPayload.Tag) {
+        const latestMessagePayload = {
+            ...processedPayload,
+            Tag: processedPayload.Tag.toUpperCase()
+        };
         needsUpdate = true;
         const tagToUpdate = latestMessagePayload.Tag;
         const existingItemIndex = newDisplayData.findIndex(item => item.Tag === tagToUpdate);
 
         if (existingItemIndex !== -1) {
-          newDisplayData[existingItemIndex] = {
+          if(newDisplayData[existingItemIndex].isKnown){
+            newDisplayData[existingItemIndex] = {
             ...latestMessagePayload,
+            isKnown:true,
             updateId: Date.now(),
           };
-        } else if (isCsvMode) {
-          const newItem = {
-            ...latestMessagePayload,
-            isKnown: false,
-            updateId: Date.now(),
-          };
-          newDisplayData.push(newItem);
-        } else if (!isCsvMode) {
+          }
+          else{
+            newDisplayData[existingItemIndex] = {
+              ...latestMessagePayload,
+              isKnown:false,
+              updateId: Date.now(),
+            };
+          }
+        } 
+        else{
           const newItem = {
             ...latestMessagePayload,
             isKnown: false,
@@ -126,13 +135,15 @@ function MessageDisplay({ messages, filters }) {
                   }
                 }
               } else {
+                if(item.State === 'TRANSITION'){
                 if (item.Current_Zone === 2) rowClassName += ' green-background';
                 else if (item.Current_Zone === 1) rowClassName += ' yellow-background';
+                }
               }
 
-              const previousZone = item.Previous_zone || 'NA';
-              const currentZone = item.Current_Zone || 'NA';
-              const zoneTransition = (item.Current_Zone || item.Previous_zone) ? `${previousZone} → ${currentZone}` : '';
+              const previousZone =item.Previous_Zone || 'NA';
+              const currentZone = item.Current_Zone ||  'NA';
+              const zoneTransition = (item.Current_Zone ) ? `${previousZone} → ${currentZone}` : '';
 
               return (
                 <tr key={item.Tag} className={rowClassName}>
