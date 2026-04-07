@@ -1,0 +1,10 @@
+Scenerio 2
+Boh
+Antenna 2-4 distance between 8ft
+From door less than 1ft
+
+Foh 
+Height
+    Antenna 3- 4.6ft
+    Antenna 1-5ft
+Distance between them 9ft

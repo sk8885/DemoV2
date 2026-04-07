@@ -1,0 +1,15 @@
+Scenerio 1
+Antenna 2-4 6ft
+From door (origin)
+Antenna 4- 1ft
+Antenna 2-  7.6ft
+DoorFrame- 6ft
+Dist between 2-4 antenna 15ft
+Width 6.5ft
+End to end tags distance 22ft
+
+Foh 
+Height
+    Antenna 3- 4.6ft
+    Antenna 1-5ft
+Distance between them 9ft

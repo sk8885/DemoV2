@@ -1,0 +1,12 @@
+Scenerio 3
+Boh
+Antenna distance 2-4 11ft
+From wall 3ft
+Antenna 4 from door 4ft
+3 0ft
+
+Foh
+Height
+    Antenna 3- 4.6ft
+    Antenna 1-5ft
+Distance between them 9ft

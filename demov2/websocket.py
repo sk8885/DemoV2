@@ -64,7 +64,7 @@ async def on_message_handler(topic, payload):
             # If Event is 'spd', this is a 'tag' message.
             message_to_send = json.dumps({"type": "tag", "payload": data})
             # print(message_to_send)
-        elif event_type == 'RAW':
+        elif event_type == 'SPD_RAW':
             # If Event is 'raw', this is a 'report' message.
             message_to_send = json.dumps({"type": "report", "payload": data})
         else:

@@ -10,49 +10,29 @@ const useGenerateAndDownloadCsv = () => {
             return;
         }
 
-        let headers = [];
-        let rows = [];
+        let headers = ['Type', 'Timestamp', 'Payload'];
         let fileNamePrefix = '';
+        let rows = [];
 
         if (type === 'tag_data') {
-            headers = ['Tag ID', 'Last Seen Time', 'Previous Zone', 'Current Zone'];
             rows = data.map(msg => {
-                const payload = msg.data.payload;
-                if (!payload) return '';
-                const tagId = payload.Tag || 'NA';
-                const timestamp = payload.Timestamp || 'NA';
-                const previousZone = payload.Previous_zone || 'NA';
-                const currentZone = payload.Current_Zone || 'NA';
-                return `"${tagId}","${timestamp}","${previousZone}","${currentZone}"`;
-            }).filter(row => row);
+                const payload = msg.data.payload ? JSON.stringify(msg.data.payload) : '{}';
+                const type = msg.data.type || 'NA';
+                const timestamp = msg.data.timestamp || 'NA';
+                return `"${type}","${timestamp}","${payload.replace(/"/g, '""')}"`;
+            });
             fileNamePrefix = 'tag_data';
-
         } else if (type === 'raw_report') {
-            // Assuming the report payload is a flat object. We can dynamically create headers.
-            const allKeys = data.reduce((keys, item) => {
-                if (item.payload) {
-                    Object.keys(item.payload).forEach(key => {
-                        if (!keys.includes(key)) {
-                            keys.push(key);
-                        }
-                    });
-                }
-                return keys;
-            }, []);
-            
-            headers = ['type', 'timestamp', ...allKeys];
             rows = data.map(report => {
-                const rowData = {
-                    type: report.type || 'NA',
-                    timestamp: report.timestamp || 'NA',
-                    ...report.payload
-                };
-                return headers.map(header => `"${rowData[header] || 'NA'}"`).join(',');
+                const payload = report.payload ? JSON.stringify(report.payload) : '{}';
+                const type = report.type || 'NA';
+                const timestamp = report.timestamp || 'NA';
+                return `"${type}","${timestamp}","${payload.replace(/"/g, '""')}"`;
             });
             fileNamePrefix = 'raw_data(report)';
         }
 
-        if (headers.length === 0) return;
+        if (rows.length === 0) return;
 
         const csvContent = [headers.join(','), ...rows].join('\n');
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -71,10 +51,8 @@ const useGenerateAndDownloadCsv = () => {
     return generateAndDownload;
 };
 
-
 function MainPage() {
     const [isRunning, setIsRunning] = useState(false);
-
     const [messages, setMessages] = useState(() => {
         const savedMessages = localStorage.getItem('mqttTagMessages');
         return savedMessages ? JSON.parse(savedMessages) : [];
@@ -85,7 +63,6 @@ function MainPage() {
         const savedRawMessages = localStorage.getItem('mqttRawMessages');
         return savedRawMessages ? JSON.parse(savedRawMessages) : [];
     });
-
     const [connectionStatus, setConnectionStatus] = useState('disconnected');
     const [errorMessage, setErrorMessage] = useState('');
     const [csvData, setCsvData] = useState(null);
@@ -94,7 +71,6 @@ function MainPage() {
     
     const fileInputRef = useRef(null);
     const wsRef = useRef(null);
-
     // --- NEW: Instantiate the CSV download hook ---
     const generateAndDownloadCsv = useGenerateAndDownloadCsv();
 
@@ -115,7 +91,6 @@ function MainPage() {
 
         return () => clearInterval(interval); // Cleanup on component unmount
     }, [generateAndDownloadCsv]);
-
 
     const handleImport = () => {
         fileInputRef.current?.click();
@@ -160,7 +135,6 @@ function MainPage() {
             try {
                 const messageData = JSON.parse(event.data);
                 console.log('Received message:', messageData);
-
                 if (messageData.type === 'report') {
                     setRawMessages((prevRawMessages) => [
                         ...prevRawMessages,
@@ -220,13 +194,13 @@ function MainPage() {
     const handleClear = () => {
         console.log("Clearing data and saving current state...");
         // Save current data before clearing
-        generateAndDownloadCsv(messages, 'tag_data');
-        generateAndDownloadCsv(rawMessages, 'raw_report');
+        // generateAndDownloadCsv(messages, 'tag_data');
+        // generateAndDownloadCsv(rawMessages, 'raw_report');
         
         // Now clear the state
         setMessages([]);
         setRawMessages([]);
-    };
+    };  
 
     // Save tag messages to localStorage
     useEffect(() => {
