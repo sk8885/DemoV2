@@ -2,6 +2,17 @@ import React, { useState, useRef, useEffect } from 'react';
 import './MainPage.css';
 import MessageDisplay from './MessageDisplay';
 
+const getStoredMessages = (key) => {
+    try {
+        const storedMessages = localStorage.getItem(key);
+        const parsedMessages = storedMessages ? JSON.parse(storedMessages) : [];
+        return Array.isArray(parsedMessages) ? parsedMessages : [];
+    } catch (error) {
+        console.warn(`Ignoring invalid saved data for ${key}.`, error);
+        return [];
+    }
+};
+
 // Custom Hook for CSV Generation and Download
 const useGenerateAndDownloadCsv = () => {
     const generateAndDownload = (data, type) => {
@@ -53,16 +64,10 @@ const useGenerateAndDownloadCsv = () => {
 
 function MainPage() {
     const [isRunning, setIsRunning] = useState(false);
-    const [messages, setMessages] = useState(() => {
-        const savedMessages = localStorage.getItem('mqttTagMessages');
-        return savedMessages ? JSON.parse(savedMessages) : [];
-    });
+    const [messages, setMessages] = useState(() => getStoredMessages('mqttTagMessages'));
     
     // --- NEW: Load raw messages from localStorage ---
-    const [rawMessages, setRawMessages] = useState(() => {
-        const savedRawMessages = localStorage.getItem('mqttRawMessages');
-        return savedRawMessages ? JSON.parse(savedRawMessages) : [];
-    });
+    const [rawMessages, setRawMessages] = useState(() => getStoredMessages('mqttRawMessages'));
     const [connectionStatus, setConnectionStatus] = useState('disconnected');
     const [errorMessage, setErrorMessage] = useState('');
     const [csvData, setCsvData] = useState(null);
@@ -118,7 +123,8 @@ function MainPage() {
 
     const connectWebSocket = (isResuming = false) => {
         const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const wsUrl = `${wsProtocol}//localhost:8001/ws`;
+        const wsPort = process.env.REACT_APP_WEBSOCKET_PORT || '8003';
+        const wsUrl = `${wsProtocol}//localhost:${wsPort}/ws`;
         const ws = new WebSocket(wsUrl);
 
         ws.onopen = () => {

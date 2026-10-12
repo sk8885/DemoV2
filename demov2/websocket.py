@@ -10,7 +10,9 @@ import uvicorn
 # All messages are now expected from a single topic.
 MQTT_BROKER_URL = os.getenv("MQTT_BROKER_URL", "10.233.45.50")
 MQTT_BROKER_PORT = int(os.getenv("MQTT_BROKER_PORT", 1883))
-MQTT_INPUT_TOPIC = os.getenv("REACT_APP_MQTT_TOPIC", "spd_event_tester_topic")
+MQTT_INPUT_TOPIC = os.getenv("REACT_APP_MQTT_TOPIC", "test_onReaderReplay/directionalityEvents")
+WEBSOCKET_HOST = os.getenv("WEBSOCKET_HOST", "127.0.0.1")
+WEBSOCKET_PORT = int(os.getenv("WEBSOCKET_PORT", 8003))
 
 # --- FastAPI App ---
 app = FastAPI()
@@ -115,7 +117,7 @@ async def startup_event():
     mqtt_client = setup_mqtt_client(loop)
     mqtt_client.loop_start()  # Starts a background thread for the MQTT network loop
     app.state.mqtt_client = mqtt_client
-    print(f"WebSocket endpoint is ready at ws://127.0.0.1:8001/ws")
+    print(f"WebSocket endpoint is ready at ws://{WEBSOCKET_HOST}:{WEBSOCKET_PORT}/ws")
     print(f"Subscribing to MQTT topic on {MQTT_BROKER_URL}:")
     print(f" - Topic: {MQTT_INPUT_TOPIC}")
 
@@ -140,4 +142,4 @@ async def websocket_endpoint(websocket: WebSocket):
 # --- Main Execution ---
 if __name__ == "__main__":
     # Use this to run the server directly with `python websocket.py`
-    uvicorn.run(app, host="127.0.0.1", port=8001)
+    uvicorn.run(app, host=WEBSOCKET_HOST, port=WEBSOCKET_PORT)

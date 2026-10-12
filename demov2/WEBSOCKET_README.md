@@ -23,7 +23,7 @@ You should see output like:
 ```
 Starting server and MQTT client...
 Connected to MQTT Broker!
-WebSocket endpoint is ready at ws://127.0.0.1:8001/ws
+WebSocket endpoint is ready at ws://127.0.0.1:8003/ws
 Subscribing to MQTT topic on 10.233.46.175:
  - Topic: spd_events_pm_demo
 ```
@@ -41,6 +41,7 @@ Or set environment variables:
 set MQTT_BROKER_URL=your_broker_ip
 set MQTT_BROKER_PORT=1883
 set REACT_APP_MQTT_TOPIC=your_topic
+set WEBSOCKET_PORT=8003
 ```
 
 ## Running the React App
@@ -54,7 +55,7 @@ npm start
 
 ## How It Works
 
-1. Click **Start** button → React connects to WebSocket at `localhost:8001`
+1. Click **Start** button → React connects to WebSocket at `localhost:8003`
 2. WebSocket server connects to MQTT broker and subscribes to the configured topic
 3. Messages arrive → Server broadcasts to all connected WebSocket clients
 4. Frontend receives and displays messages in real-time
